@@ -16,6 +16,6 @@ This project demonstrates how to interface an **ESP32** with a **DHT22** sensor 
 
 ## Setup Instructions
 1. **Blynk Setup:** Create a new Template on Blynk.
-2. **Credentials:** Copy your `BLYNK_TEMPLATE_ID`, `BLYNK_TEMPLATE_NAME`, and `BLYNK_AUTH_TOKEN`.
+2. **Credentials:** Copy your BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, and BLYNK_AUTH_TOKEN.
 3. **Configure Code:** Paste these credentials into the `sketch.ino` file provided in this repository.
 4. **Run:** Upload to ESP32 or start the Wokwi simulation.
