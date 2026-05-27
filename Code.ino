@@ -8,7 +8,7 @@
 #include <BlynkSimpleEsp32.h>
 #include <DHT.h>
 
-// Wokwi ke current circuit ke mutabiq pins
+// Pins according to the current Wokwi circuit
 #define DHTPIN 15          // DHT22 data pin (Green wire)
 #define DHTTYPE DHT22
 #define LED_PIN 26         // LED control pin (Green wire)
@@ -20,9 +20,10 @@ char auth[] = BLYNK_AUTH_TOKEN;
 char ssid[] = "Wokwi-GUEST"; // Wokwi virtual WiFi network
 char pass[] = "";
 
-// Blynk Dashboard se LED control karne ke liye
+// To control LED from the Blynk Dashboard
 BLYNK_WRITE(V2) {
   int buttonState = param.asInt();
+
   if (buttonState == 1) {
     digitalWrite(LED_PIN, HIGH);
     Serial.println("Blynk Notification: LED turned ON");
@@ -32,43 +33,48 @@ BLYNK_WRITE(V2) {
   }
 }
 
-// Sensor ka data har 2 second baad Blynk par bhejte hain
+// Send sensor data to Blynk every 2 seconds
 void sendDHTData() {
+
   float t = dht.readTemperature();
   float h = dht.readHumidity();
-  
+
   if (isnan(h) || isnan(t)) {
     Serial.println("Error: Failed to read from DHT sensor!");
     return;
   }
 
-  // Blynk cloud par custom datastreams par write kar rahe hain
+  // Sending data to Blynk cloud virtual pins
   Blynk.virtualWrite(V0, t); // Temperature data to V0
   Blynk.virtualWrite(V1, h); // Humidity data to V1
 
-  // Serial monitor debugging ke liye
+  // Serial Monitor debugging
   Serial.print("Current Temp: ");
   Serial.print(t);
   Serial.print(" °C\t");
+
   Serial.print("Current Humidity: ");
   Serial.print(h);
   Serial.println(" %");
 }
 
 void setup() {
+
   Serial.begin(115200);
+
   pinMode(LED_PIN, OUTPUT);
-  
-  dht.begin(); // DHT sensor active ho gaya
-  
-  // Blynk server aur virtual WiFi configuration init
+
+  dht.begin(); // Initialize DHT sensor
+
+  // Initialize Blynk server and WiFi connection
   Blynk.begin(auth, ssid, pass);
-  
-  // 2000 milliseconds (2 seconds) ka loop timer setup
+
+  // Set timer to call function every 2000 milliseconds (2 seconds)
   timer.setInterval(2000L, sendDHTData);
 }
 
 void loop() {
+
   Blynk.run();
   timer.run();
 }
